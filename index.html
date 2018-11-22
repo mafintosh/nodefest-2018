@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset='utf-8'>
+  <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' />
+  <title>Big</title>
+  <link href='big.css' rel='stylesheet' type='text/css' />
+  <link href='highlight.css' rel='stylesheet' type='text/css' />
+  <style>
+    .new-shiny { background: #aaaaaa; }
+
+    .wagon {
+      min-width: 100px;
+      height: 130px;
+      border: 5px solid #ddd;
+
+      border-top-left-radius: 20px;
+      border-top-right-radius: 20px;
+
+      font-size: 50px;
+      line-height: 130px;
+      text-align: center;
+      margin-top: 34px;
+      margin-right: 10px;
+
+      transition: color 0.5s ease;
+    }
+
+    .train {
+      transition: margin-left 0.5s ease;
+    }
+
+    .hash-3 {
+      transition: opacity 0.5s ease;
+      opacity: 0;
+      min-width: 960px;
+      font-size: 60px;
+      text-align: center;
+    }
+ 
+    .hash-2 {
+      transition: opacity 0.5s ease;
+      opacity: 0;
+      min-width: 480px;
+      font-size: 60px;
+      text-align: center;
+    }
+ 
+    .hash-1 {
+      transition: opacity 0.5s ease;
+      opacity: 0;
+      min-width: 240px;
+      font-size: 60px;
+      text-align: center;
+    }
+ 
+    .hash-root, .hash-root-perm {
+      font-weight: bold;
+      color: red;
+    }
+
+    .g {
+      font-weight: bold;
+      color: lightblue;
+    }
+
+    .r {
+      font-weight: bold;
+      color: red !important;
+    }
+
+    .hash {
+      transition: opacity 0.5s ease;
+      opacity: 0;
+      min-width: 120px;
+      font-size: 60px;
+      text-align: center;
+    }
+
+    @keyframes bounce {
+        0%   {margin-top: 34px;}
+        50%  {margin-top: 0px;}
+        100% {margin-top: 34px;}
+    }
+
+    .show .hash,
+    .show .hash-1,
+    .show .hash-2,
+    .show .hash-3 {
+      opacity: 1 !important;
+      transition: color 0.5s ease;
+    }
+
+    .bounce {
+      animation-name: bounce;
+      animation-duration: 1s;
+      animation-iteration-count: infinite;
+    }
+
+    .no {
+      white-space: nowrap;
+    }
+
+    .hint-3,
+    .hint-2,
+    .hint-1 {
+      transition: opacity 0.5s ease;
+      color: gray;
+      position: fixed;
+      left: 50px;
+      top: 50px;
+      font-size: 50px;
+    }
+  </style>
+  <script src='big.js'></script>
+  <script src='highlight.js'></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <script>
+    let trains = 1
+    let tree = -1
+    let idx = -1
+
+    function sg (clz) {
+      for (const e of document.querySelectorAll('.' + clz)) {
+        e.className += ' g'
+      }
+    }
+    document.onkeydown = function (e) {
+      console.log(e.keyCode)
+      if (e.keyCode === 85) {
+        document.querySelector('.hint-3').style.opacity = '0'
+        for (const e of document.querySelectorAll('.bounce')) {
+          e.className = 'wagon target'
+          e.style.color = 'lightblue'
+          e.style.fontWeight = 'bold'
+        }
+        switch (idx++) {
+          case 0:
+            sg('b10')
+            break
+          case 1:
+            sg('b9')
+            break
+          case 2:
+            sg('b11')
+            break
+          case 3:
+            for (const e of document.querySelectorAll('.b10, .b9, .b11, .b8, .b13, .b3')) {
+              e.className += ' r'
+            }
+            for (const e of document.querySelectorAll('.target')) {
+              e.style.color = 'red'
+            }
+            break
+         }
+      }
+      if (e.keyCode === 89) {
+        document.querySelector('.hint-2').style.opacity = '0'
+        tree++
+        switch (tree) {
+          case 0:
+            show([0], [0])
+            break
+          case 1:
+            show([2, 1], [1])
+            break
+          case 2:
+            show([4], [1, 4])
+            break
+          case 3:
+            show([3, 5, 6], [3])
+            break
+          case 4:
+            show([8], [3, 8])
+            break
+          case 5:
+            show([9, 10], [3, 9])
+            break
+          case 6:
+            show([12], [3, 9, 12])
+            break
+          case 7:
+            show([7, 11, 13, 14], [7])
+            break
+        }
+      }
+      if (e.keyCode === 84) {
+        document.querySelector('.hint-1').style.opacity = '0'
+        trains++
+        if (trains === 5) trains = 1000
+        const t = document.querySelector('.train')
+        const w = Math.max(0, 1400 - (120 * trains) - 67)
+        t.style.marginLeft = w + 'px'
+      }
+    }
+
+    function show (blocks, roots) {
+      for (const b of blocks) {
+        document.querySelector('.b' + b).style.opacity = 1
+      }
+      for (const n of document.querySelectorAll('.hash-root')) {
+        n.className = n.className.replace('hash-root', '')
+      }
+      for (const r of roots) {
+        document.querySelector('.b' + r).className += ' hash-root'
+      }
+    }
+  </script>
+</head>
+<body class='light'>
+  <div>Collaborative <em>P2P</em></div>
+
+  <div><em>@</em>mafintosh</div>
+
+  <div>Denmark</div>
+
+  <div>About half the size of <em>Taiwan</em></div>
+
+  <div>With half the population of <em>Tokyo</em></div>
+
+  <div>
+    <em>Collaboration</em> means connecting with friends and <em>sharing data</em>
+  </div>
+
+  <div>
+    ... but using <em>P2P</em>
+  </div>
+
+  <div>
+    <span class="no"><em>1.</em> P2P Networking</span>
+    <span class="no"><em>2.</em> Append only logs</span>
+    <span class="no"><em>3.</em> Tries</span>
+  </div>
+
+  <div>
+    <span class="no"><em>1.</em> P2P Networking</span>
+  </div>
+
+  <div>
+    stuff ...
+  </div>
+
+  <div>
+    <span class="no"><em>2.</em> Append only logs</span>
+  </div>
+ 
+  <div>
+    One of the most important P2P data structures <em><i>for anything</i></em>
+  </div>
+
+  <div>
+    <div class="hint-1">
+      (Press t to move)
+    </div>
+    <div style="width: 1400px; overflow: hidden">
+      <div class="train" style="display: flex; margin-left: 1213px;">
+        <div style="font-size: 150px">
+          🚅
+        </div>
+        <div class="wagon">0</div>
+        <div class="wagon">1</div>
+        <div class="wagon">2</div>
+        <div class="wagon">3</div>
+        <div class="wagon">4</div>
+        <div class="wagon">5</div>
+        <div class="wagon">6</div>
+        <div class="wagon">7</div>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    Append Only Logs can be verified using <em>Merkle Trees</em>
+  </div>
+
+  <div>
+    <div class="hint-2">
+      (Press y to move)
+    </div>
+    <div style="display: flex; margin-left: 188px">
+      <div class="hash-3 b7">
+        / \
+      </div>
+    </div>
+    <div style="display: flex; margin-left: 188px">
+      <div class="hash-2 b3">
+        / 
+      </div>
+      <div class="hash-2 b11">
+        \
+      </div>
+    </div>
+    <div style="display: flex; margin-left: 188px">
+      <div class="hash-1 b1">
+        / 
+      </div>
+      <div class="hash-1 b5">
+        \
+      </div>
+      <div class="hash-1 b9">
+        / 
+      </div>
+      <div class="hash-1 b13">
+        \
+      </div>
+    </div>
+    <div style="display: flex; margin-left: 188px">
+      <div class="hash b0">
+        / 
+      </div>
+      <div class="hash b2">
+        \
+      </div>
+      <div class="hash b4">
+        / 
+      </div>
+      <div class="hash b6">
+        \
+      </div>
+      <div class="hash b8">
+        / 
+      </div>
+      <div class="hash b10">
+        \
+      </div>
+      <div class="hash b12">
+        / 
+      </div>
+      <div class="hash b14">
+        \
+      </div>
+    </div>
+    <div class="train" style="display: flex;">
+      <div style="font-size: 150px">
+        🚅
+      </div>
+      <div class="wagon">0</div>
+      <div class="wagon">1</div>
+      <div class="wagon">2</div>
+      <div class="wagon">3</div>
+      <div class="wagon">4</div>
+      <div class="wagon">5</div>
+      <div class="wagon">6</div>
+      <div class="wagon">7</div>
+    </div>
+  </div>
+
+  <div>
+    Assume we trust <em>/\</em>
+  </div>
+
+  <div>
+    What if we want to get <em>5</em>?
+  </div>
+
+  <div>
+    Someone just need to send us the <em>"uncles"</em>
+  </div>
+
+  <div class="show">
+    <div class="hint-3">
+      (Press u to move)
+    </div>
+    <div style="display: flex; margin-left: 188px">
+      <div class="hash-3 b7 hash-root-perm">
+        / \
+      </div>
+    </div>
+    <div style="display: flex; margin-left: 188px">
+      <div class="hash-2 b3">
+        / 
+      </div>
+      <div class="hash-2 b11">
+        \
+      </div>
+    </div>
+    <div style="display: flex; margin-left: 188px">
+      <div class="hash-1 b1">
+        / 
+      </div>
+      <div class="hash-1 b5">
+        \
+      </div>
+      <div class="hash-1 b9">
+        / 
+      </div>
+      <div class="hash-1 b13">
+        \
+      </div>
+    </div>
+    <div style="display: flex; margin-left: 188px">
+      <div class="hash b0">
+        / 
+      </div>
+      <div class="hash b2">
+        \
+      </div>
+      <div class="hash b4">
+        / 
+      </div>
+      <div class="hash b6">
+        \
+      </div>
+      <div class="hash b8">
+        / 
+      </div>
+      <div class="hash b10">
+        \
+      </div>
+      <div class="hash b12">
+        / 
+      </div>
+      <div class="hash b14">
+        \
+      </div>
+    </div>
+    <div class="train" style="display: flex;">
+      <div style="font-size: 150px">
+        🚅
+      </div>
+      <div class="wagon">0</div>
+      <div class="wagon">1</div>
+      <div class="wagon">2</div>
+      <div class="wagon">3</div>
+      <div class="wagon">4</div>
+      <div class="wagon bounce">5</div>
+      <div class="wagon">6</div>
+      <div class="wagon">7</div>
+    </div>
+  </div>
+
+  <div>
+    To verify any piece of data we at most need <em>log2(n) "uncles"</em>
+  </div>
+
+  <div>
+    Very <em>efficient!</em>
+  </div>
+
+  <div>
+    Also means we can replicate <em>"random access"</em>
+  </div>
+
+  <div>
+    Only get the parts of the <em>Append Only Log</em> we want
+  </div>
+
+</body>
+</html>
