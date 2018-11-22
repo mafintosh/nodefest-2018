@@ -267,11 +267,87 @@
   </div>
 
   <div>
-    (todo slides)
+    How do we <em>connect to friends</em> on the internet?
+  </div>
+
+  <div>
+<pre><code>
+const net = require('net')
+const socket = net.connect('best-friend.com')
+</code></pre>
+  </div>
+
+  <div>
+    <em>Problem:</em><br>
+    Hard to run servers
+  </div>
+
+  <div>
+    <em>Problem:</em><br>
+    We want encryption as well
+  </div>
+
+  <div>
+    <em>Solution:</em><br>
+    Every friend has a <em>cryptographic</em> key-pair
+  </div>
+
+  <div>
+    The friend's P2P <em>"name"</em> is their public key
+  </div>
+
+  <div>
+    They announce their <em>public key</em> and <em>ip+port</em> on a <em>DHT</em>
+  </div>
+
+  <div>
+    A <em>DHT</em> is like a global distributed database
+  </div>
+
+  <div>
+    Encryption is provided by <em>NOISE</em>, a modular SSL stack
   </div>
 
   <div>
     <span class="no">npm install <em>noise-network</em></span>
+  </div>
+
+  <div>
+<pre><code>
+const noise = require('noise-network')
+
+// Make a cryptographic keypair
+const keyPair = noise.keygen()
+
+const server = noise.createServer(encryptedStream => {
+  console.log('new secure stream!')
+})
+
+// Announce ourself on the DHT
+server.listen(keyPair)
+
+console.log(`Listening on ${keyPair.publicKey.toString('hex')}`)
+</code></pre>
+  </div>
+
+  <div>
+    Our friends can find us using <em>the public key</em>
+  </div>
+
+  <div>
+<pre><code>
+const noise = require('noise-network')
+
+// stream is a encrypted stream to the server!
+const stream = noise.connect('a-servers-public-key')
+
+// totally private, only the server can see the 'hi'
+stream.write('hi')
+</code></pre>
+  </div>
+
+  <div>
+    Does <em>UDP hole punching</em>, so works on your home network!
   </div>
 
   <div><span class="no">( demo time <em>\o/</em> )</span></div>
@@ -489,21 +565,107 @@
     <span class="no">npm install <em>hypercore</em></span>
   </div>
 
+  <div>
+<pre><code>
+const hypercore = require('hypercore')
+
+// feed is an Append-Only-Log
+const feed = hypercore('./the-data-is-stored-here')
+
+feed.append('hello')
+feed.get(0, (err, data) => console.log(data.toString()))
+</code></pre>
+  </div>
+
+  <div>
+    You can easily share <em>hypercore</em>s using the noise-network
+  </div>
+
+  <div>
+<pre><code>
+noise.createServer(encryptedStream => {
+  encryptedStream
+    .pipe(feed.replicate())
+    .pipe(encryptedStream)
+})
+</code></pre>
+  </div>
+
   <div><span class="no">( demo time <em>\o/</em> )</span></div>
+
 
   <div>
     <span class="no"><em>3.</em> Hash Array Mapped Tries</span>
   </div>
 
   <div>
-    (todo slides)
+    <em>HAMTs</em> are key-value stores!
   </div>
 
   <div>
-    <span class="no">npm install <em>hyperdb</em></span>
+    A key-value store is a <em>simple database</em>
+  </div>
+
+  <div>
+<pre><code>
+put(key, value)
+get(key) -> value
+</code></pre>
+  </div>
+
+  <div>
+    They can be adapted to run on <em>top of an Append-Only-Log</em>
+  </div>
+
+  <div>
+    <span class="no">npm install <em>hypertrie</em></span>
+  </div>
+
+  <div>
+    HAMT built on top of <em>hypercore</em>s
+  </div>
+
+  <div>
+<pre><code>
+const hypertrie = require('hypertrie')
+
+const db = hypertrie('./the-db-is-stored-here')
+
+db.put('hello', 'world', (err) => {
+  db.get('hello', (err, node) => {
+    console.log('hello', node.value.toString())
+  })
+})
+</code></pre>
+  </div>
+
+  <div>
+    HAMTs are <em>really fast</em> and <em>scale very well</em>.
+  </div>
+
+  <div>
+    As a test we have a P2P node running <em>indexing all of NPM into one</em>.
+  </div>
+
+  <div>
+    <span class="no">npm install -g <em>ims</em></span>
+  </div>
+
+  <div>
+    <em>P2P</em> npm clone
+  </div>
+
+  <div>
+    Uses <em>hypertrie</em>s to find modules through other <em>peers</em>.
   </div>
 
   <div><span class="no">( demo time <em>\o/</em> )</span></div>
+
+  <div>
+    <span class="no">npm install <em>noise-network</em></span>
+    <span class="no">npm install <em>hypercore</em></span>
+    <span class="no">npm install <em>hypertrie</em></span>
+  </div>
 
   <div>
     Thank you!
