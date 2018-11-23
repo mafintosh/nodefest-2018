@@ -305,7 +305,7 @@ const socket = net.connect('best-friend.com')
   </div>
 
   <div>
-    Encryption is provided by <em>NOISE</em>, a modular SSL stack
+    Encryption is provided by <em>NOISE</em>, a modular SSL-like stack
   </div>
 
   <div>
@@ -618,6 +618,31 @@ get(key) -> value
   </div>
 
   <div>
+    They work by hashing the key, and building a <em>prefix trie</em> based on that
+  </div>
+
+  <div>
+<pre>
+insert(deadb),
+insert(deada) ==> d
+                  e
+                  a
+                  d
+                /   \
+               a     b
+</pre>
+  </div>
+
+  <div>
+    Every <em>put</em> in a HAMT results in <em>one</em>
+    append
+  </div>
+
+  <div>
+    Every <em>get</em> only needs to look at <em>log(n)</em> entries
+  </div>
+
+  <div>
     <span class="no">npm install <em>hypertrie</em></span>
   </div>
 
@@ -665,6 +690,7 @@ db.put('hello', 'world', (err) => {
     <span class="no">npm install <em>noise-network</em></span>
     <span class="no">npm install <em>hypercore</em></span>
     <span class="no">npm install <em>hypertrie</em></span>
+    <span class="no">npm install -g <em>ims</em></span>
   </div>
 
   <div>
